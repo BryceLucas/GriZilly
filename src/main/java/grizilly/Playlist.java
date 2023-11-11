@@ -1,4 +1,4 @@
-package src;
+package grizilly;
 public abstract class Playlist {
 	// i think its fair to start these as false. spotify does
 	boolean shuffle = false;
