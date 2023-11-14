@@ -1,5 +1,7 @@
 package grizilly;
 
+import java.io.File;
+
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
@@ -10,7 +12,6 @@ public class ReadMP3Metadata {
         try {
             // Replace this with the path of MP3 file
             String mp3FilePath = "path/to/the/file.mp3";
-
             // Read MP3 file
             AudioFile audioFile = AudioFileIO.read(new File(mp3FilePath));
             
