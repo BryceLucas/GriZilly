@@ -15,7 +15,7 @@ public class ReadMP3Metadata {
             // Read MP3 file
             AudioFile audioFile = AudioFileIO.read(new File(mp3FilePath));
             
-            // Get the tag (metadata) from the MP3 file
+            // Get the metadata from the MP3 file
             Tag tag = audioFile.getTag();
 
             

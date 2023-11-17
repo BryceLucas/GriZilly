@@ -9,10 +9,8 @@ import java.nio.file.StandardCopyOption;
 public class MusicLibraryManager {
 
     public static void main(String[] args) {
-        String musicFolderPath = "Path_to_your_music_folder";
-        String libraryFolderPath = "Path_to_your_library_folder";
-
-        // Replace these paths with the actual paths to your music and library folders
+        String musicFolderPath = "Path_to_music_folder";
+        String libraryFolderPath = "Path_to_library_folder";
 
         File musicFolder = new File(musicFolderPath);
         File libraryFolder = new File(libraryFolderPath);
@@ -22,7 +20,6 @@ public class MusicLibraryManager {
             return;
         }
 
-        // List music files in the music folder and copy them to the library folder
         File[] musicFiles = musicFolder.listFiles();
         if (musicFiles != null) {
             for (File musicFile : musicFiles) {
@@ -40,7 +37,6 @@ public class MusicLibraryManager {
         }
     }
 
-    // You can customize this method to check for specific file extensions or other criteria
     private static boolean isMusicFile(File file) {
         String name = file.getName().toLowerCase();
         return name.endsWith(".mp3") || name.endsWith(".wav") || name.endsWith(".flac");
