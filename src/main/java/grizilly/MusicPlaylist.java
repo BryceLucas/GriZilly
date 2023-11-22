@@ -47,7 +47,7 @@ class MusicLibrary {
     }
 }
 
-public class SongLibrarys extends Playlist {
+public class MusicPlaylist extends Playlist {
     public static void main(String[] args) {
         MusicLibrary musicLibrary = new MusicLibrary();
         List<Song> allSongsPlaylist = musicLibrary.createAllSongsPlaylist();
