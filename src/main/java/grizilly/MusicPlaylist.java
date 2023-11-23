@@ -3,29 +3,6 @@ package grizilly;
 import java.util.ArrayList;
 import java.util.List;
 
-class Song {
-    private String title;
-    private String artist;
-
-    public Song(String title, String artist) {
-        this.title = title;
-        this.artist = artist;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    @Override
-    public String toString() {
-        return title + " by " + artist;
-    }
-}
-
 class MusicLibrary {
     private List<Song> songs;
 
@@ -35,8 +12,7 @@ class MusicLibrary {
     }
 
     private void LoadSongs() {
-        songs.add(new Song("Song1", "Artist1"));
-        songs.add(new Song("Song2", "Artist2"));
+        songs.add(new Song("path", "title", "artist", 60));
         // Add more songs as needed (dont know if this will automate)
     }
 
