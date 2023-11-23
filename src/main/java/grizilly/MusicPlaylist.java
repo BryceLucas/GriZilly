@@ -12,8 +12,7 @@ class MusicLibrary {
     }
 
     private void LoadSongs() {
-        songs.add(new Song("Song1", "Artist1"));
-        songs.add(new Song("Song2", "Artist2"));
+        songs.add(new Song("path", "title", "artist", 60));
         // Add more songs as needed (dont know if this will automate)
     }
 
