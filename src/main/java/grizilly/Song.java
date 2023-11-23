@@ -1,20 +1,18 @@
 package grizilly;
 
 public class Song {
+	private String absolutePath;
+
     private String title;
     private String artist;
+	private int lengthInSeconds;
 
-    public Song(String title, String artist) {
+    public Song(String absolutePath, String title, String artist, int lengthInSeconds) {
+		this.absolutePath = absolutePath;
+
         this.title = title;
         this.artist = artist;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getArtist() {
-        return artist;
+		this.lengthInSeconds = lengthInSeconds;
     }
 
     @Override
