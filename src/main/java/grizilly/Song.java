@@ -1,22 +1,28 @@
 package grizilly;
 
 public class Song {
-	private String absolutePath;
-
     private String title;
     private String artist;
-	private int lengthInSeconds;
+    private String album;
+    private String year;
+    private String genre;
+    private String absolutePath;  // Assuming this is the file path of the song
+    private int lengthInSeconds;  
 
-    public Song(String absolutePath, String title, String artist, int lengthInSeconds) {
-		this.absolutePath = absolutePath;
-
+    public Song(String absolutePath, String title, String artist, String album, String year, String genre, int lengthInSeconds) {
+        this.absolutePath = absolutePath;
         this.title = title;
         this.artist = artist;
-		this.lengthInSeconds = lengthInSeconds;
+        this.album = album;
+        this.year = year;
+        this.genre = genre;
+        this.lengthInSeconds = lengthInSeconds;
     }
+
+    
 
     @Override
     public String toString() {
-        return title + " by " + artist;
+        return title + " by " + artist + " on album " + album + " [" + year + ", " + genre + ", " + lengthInSeconds + " seconds]";
     }
 }
