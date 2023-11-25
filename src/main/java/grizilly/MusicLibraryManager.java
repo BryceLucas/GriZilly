@@ -20,7 +20,18 @@ public class MusicLibraryManager {
 
     public static void main(String[] args) {
         String musicFolderPath = "Path_to_music_folder";
+        String libraryFolderPath = "Path_to_library_folder";
+
         MusicLibraryManager manager = new MusicLibraryManager();
+
+        // If you want to copy files to the library folder
+        try {
+            manager.copyMusicFiles(musicFolderPath, libraryFolderPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Now update the library with metadata
         manager.updateLibraryWithMetadata(musicFolderPath);
     }
 
@@ -54,7 +65,6 @@ public class MusicLibraryManager {
         return new Song(musicFile.getAbsolutePath(), title, artist, album, year, genre, lengthInSeconds);
     }
 
-    // This method can be used if you want to copy music files to a library directory
     private void copyMusicFiles(String sourceDir, String targetDir) throws IOException {
         File musicFolder = new File(sourceDir);
         File libraryFolder = new File(targetDir);
