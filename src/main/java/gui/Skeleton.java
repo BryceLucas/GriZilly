@@ -1,33 +1,38 @@
 package gui;
 
+import grizilly.Library;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 public class Skeleton extends Application {
+	Library primLibrary;
+	public Stage primStage;
 	public static void main(String[] args) {
 		launch(args);
 	}
 
-	public Stage primStage;
-
 	@Override
 	public void start(Stage prim) {
+		primLibrary = new Library();
 		primStage = prim;
 		VBox root = createSkeleton();
 
@@ -64,10 +69,25 @@ public class Skeleton extends Application {
 
 	private MenuBar menuBars() {
 		Menu m1 = new Menu("File");
-		m1.getItems().add(new MenuItem("Add directory"));
-		m1.getItems().add(new MenuItem("Scan for new songs"));
-		MenuBar menuBar = new MenuBar(m1);
+		
+		// have to do this label stuff to make clicks work.. doesnt work on MenuItem
+		Label l1 = new Label("Add directory");
+		l1.setTextFill(Color.BLACK);
+		l1.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+			primLibrary = MenuBarClicks.addDirectory(primLibrary);
+		});
+		MenuItem menuItem = new MenuItem("", l1);
+		m1.getItems().add(menuItem);
 
+		Label l2 = new Label("Scan for new songs");
+		l2.setTextFill(Color.BLACK);
+		l2.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+			//TODO
+		});
+		MenuItem menuItem2 = new MenuItem("", l2);
+		m1.getItems().add(menuItem2);
+
+		MenuBar menuBar = new MenuBar(m1);
 		return menuBar;
 	}
 
