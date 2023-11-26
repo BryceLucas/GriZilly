@@ -1,13 +1,19 @@
 package grizilly;
+
+import java.util.ArrayList;
+import gui.AudioPlayer;
 public abstract class Playlist {
 	// i think its fair to start these as false. spotify does
 	boolean shuffle = false;
 	boolean repeat = false;
 
 	String nameOfPlaylist;
+	AudioPlayer audioPlayer;
 	// for songList field, we might need to make a new class to be that songlist
 	// because for example, the music playlist is easy, its just a list of songs,
 	// but artist is more complicated, would need to group artists up and then list each song under an artist
+	ArrayList<Song> songList;
+	Song currentSong;
 
 	public void toggleShuffle() {
 		if (repeat == false) {
@@ -23,24 +29,48 @@ public abstract class Playlist {
 			shuffle = true;
 		}
 	}
-	// these two will need to be done after we decide what to do about songList
-	public void addSong() {
-		// TODO
+	
+	public void addSong(Song song) {
+		songList.add(song);
+
+		if (songList.size() == 1) {
+			setCurrentSong(song);
+		}
 	}
-	public void deleteSong() {
-		// TODO
+	public void deleteSong(Song song) {
+		songList.remove(song);
+	}
+	public void setCurrentSong(Song song) {
+		currentSong = song;
 	}
 
 	public void play() {
-		// TODO
+		audioPlayer.playAudio();
 	}
 	public void pause() {
-		// TODO
+		audioPlayer.pauseAudio();
 	}
+	// autoplays the next/last  song
 	public void back() {
-		// TODO
+		int index = songList.indexOf(currentSong);
+
+		// checking if going back would cause OOB error
+		if (index > 0) {
+			audioPlayer = new AudioPlayer(songList.get(index - 1).absolutePath);
+			play();
+		} else {
+			System.out.println("Back failed: index - 1 is OOB");
+		}
 	}
 	public void next() {
-		// TODO
+		int index = songList.indexOf(currentSong);
+
+		// checking if going forward would cause OOB error
+		if (index == songList.size() - 1 ) {
+			audioPlayer = new AudioPlayer(songList.get(index + 1).absolutePath);
+			play();
+		} else {
+			System.out.println("Forward failed: index + 1 is OOB");
+		}
 	}
 }
