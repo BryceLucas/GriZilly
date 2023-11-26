@@ -10,7 +10,9 @@ class MusicLibrary {
         this.songs = new ArrayList<>();
         LoadSongs();
     }
-
+    public void addSong(Song song) {
+        songs.add(song);
+    }
     private void LoadSongs() {
         songs.add(new Song("path", "title", "artist", 60));
         // Add more songs as needed (dont know if this will automate)
