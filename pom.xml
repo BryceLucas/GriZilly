@@ -56,7 +56,7 @@
 			<version>0.0.8</version>
 			<configuration>
 				<!--packageName.javaFileName-->
-				<mainClass>grizilly.Skeleton</mainClass>
+				<mainClass>gui.Skeleton</mainClass>
 			</configuration>
     	</plugin>
 		<!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->

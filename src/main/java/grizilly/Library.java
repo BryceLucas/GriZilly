@@ -1,4 +1,5 @@
 package grizilly;
+
 import java.util.ArrayList;
 
 public class Library {
@@ -7,21 +8,29 @@ public class Library {
 	// default should be the music playlist?
 	Playlist currentPlaylist;
 	
-	// this one will be the first library you create on first time opening the program
-	public Library() {
+	//empty library
+	public Library () {
 
 	}
-	// this one will read a file (JSON? or some other kind)
-	// to create the library. lets you save your directories and such
-	public Library(String pathToJSON) {
-		// TODO
+	
+	// Creates a library with 1 directory.
+	public Library(String firstDir) {
+		addDirectory(firstDir);
+		createSpecialPlaylists();
 	}
 
 	public void addDirectory(String path) {
 		directories.add(path);
+		createSpecialPlaylists();
 	}
 	public void removeDirectory(String path) {
 		directories.remove(path);
+		createSpecialPlaylists();
+	}
+	public void printDirs() {
+		for (String s : directories) {
+			System.out.println(s);
+		}
 	}
 	// will have to run this every time a new directory is added or on rescan of files in dirs
 	private void createSpecialPlaylists() {
