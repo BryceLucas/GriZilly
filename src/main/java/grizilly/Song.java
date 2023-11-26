@@ -1,7 +1,7 @@
 package grizilly;
 
 public class Song {
-	private String absolutePath;
+	String absolutePath;
 
     private String title;
     private String artist;
