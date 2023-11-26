@@ -1,12 +1,12 @@
 package grizilly;
 
 public class Song {
-    private String title;
-    private String artist;
-    private String album;
-    private String year;
-    private String genre;
-    private String absolutePath;  // Assuming this is the file path of the song
+    String title;
+    String artist;
+    String album;
+    String year;
+    String genre;
+    String absolutePath;  // Assuming this is the file path of the song
     private int lengthInSeconds;  
 
     public Song(String absolutePath, String title, String artist, String album, String year, String genre, int lengthInSeconds) {
