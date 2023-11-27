@@ -36,6 +36,10 @@ public abstract class Playlist {
 		if (songList.size() == 1) {
 			setCurrentSong(song);
 		}
+
+		// the first song you add to the music playlist becomes the default song it will play
+		// guarentees if there are songs in the playlist, the audiplayer will not be empty
+		createAudioPlayer();
 	}
 	public void deleteSong(Song song) {
 		songList.remove(song);
@@ -72,5 +76,8 @@ public abstract class Playlist {
 		} else {
 			System.out.println("Forward failed: index + 1 is OOB");
 		}
+	}
+	private void createAudioPlayer() {
+		audioPlayer = new AudioPlayer(currentSong.absolutePath);
 	}
 }

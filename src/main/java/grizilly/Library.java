@@ -7,7 +7,7 @@ public class Library {
 	ArrayList<Playlist> specialPlaylists = new ArrayList<>();
 	ArrayList<Playlist> customPlaylists = new ArrayList<>();
 	// default should be the music playlist?
-	Playlist currentPlaylist;
+	public Playlist currentPlaylist;
 	
 	//empty library
 	public Library () {
@@ -47,7 +47,13 @@ public class Library {
 			specialPlaylists.remove(0);
 			specialPlaylists.add(builder.createPlaylist(directories.get(0)));
 		}
-		System.out.println("POOOOOOOOOOOOOOOOOOP");
-		System.out.println(specialPlaylists.get(0).songList);
+
+		// sets the music playlist to current playlist upon creation of specials
+		// this is okay because rn we only do this once.
+		setCurrentPlaylist(specialPlaylists.get(0));
+	}
+
+	private void setCurrentPlaylist(Playlist playlist) {
+		this.currentPlaylist = playlist;
 	}
 }
