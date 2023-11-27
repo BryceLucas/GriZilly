@@ -2,7 +2,6 @@ package gui;
 
 import grizilly.Library;
 import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -170,27 +169,4 @@ public class Skeleton extends Application {
 
 		return bottom;
 	}
-}
-
-class TTest {
-	private StringProperty firstName;
-
-	public TTest(String firstName) {
-		setFirstName(firstName);
-	}
-	public void setFirstName(String value) {
-		firstNameProperty().set(value);
-	}
-
-	public String getFirstName() {
-		return firstNameProperty().get();
-	}
-
-	public StringProperty firstNameProperty() {
-		if (firstName == null)
-			firstName = new SimpleStringProperty(this, "firstName");
-		return firstName;
-	}
-
-
 }
