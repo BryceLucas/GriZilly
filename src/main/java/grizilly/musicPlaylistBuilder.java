@@ -10,29 +10,20 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.FieldKey;
 
-public class MusicLibraryManager {
+public class musicPlaylistBuilder {
 
-    private MusicLibrary musicLibrary;
+    private Playlist musicPlaylist;
 
-    public MusicLibraryManager() {
-        this.musicLibrary = new MusicLibrary();
+    public musicPlaylistBuilder() {
+        this.musicPlaylist = new MusicPlaylist();
     }
+	
 
-    public static void main(String[] args) {
-        String musicFolderPath = "Path_to_music_folder";
-        String libraryFolderPath = "Path_to_library_folder";
+    public Playlist createPlaylist(String musicFolderPath) {
+        // Now update the playlist with metadata
+        updateLibraryWithMetadata(musicFolderPath);
 
-        MusicLibraryManager manager = new MusicLibraryManager();
-
-        // If you want to copy files to the library folder
-        try {
-            manager.copyMusicFiles(musicFolderPath, libraryFolderPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Now update the library with metadata
-        manager.updateLibraryWithMetadata(musicFolderPath);
+		return musicPlaylist;
     }
 
     public void updateLibraryWithMetadata(String directoryPath) {
@@ -43,7 +34,7 @@ public class MusicLibraryManager {
             for (File musicFile : musicFiles) {
                 try {
                     Song song = readMetadata(musicFile);
-                    musicLibrary.addSong(song);
+                    musicPlaylist.addSong(song);
                     System.out.println("Added to library: " + song);
                 } catch (Exception e) {
                     e.printStackTrace();
