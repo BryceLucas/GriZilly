@@ -23,7 +23,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 public class Skeleton extends Application {
-	Library primLibrary;
+	public Library primLibrary;
 	public Stage primStage;
 	public static void main(String[] args) {
 		launch(args);
@@ -121,7 +121,7 @@ public class Skeleton extends Application {
 		playlistTable.getItems().add(tt);
 	
 		playlistTable.getItems().add(new TTest("Music"));
-	//this should be making the name show in the column but it doesnt idk why
+	//this should be making the name show in the column
 		column.setCellValueFactory(new PropertyValueFactory<TTest, String>(tt.firstNameProperty().getName()));
 
 		return playlistTable;
@@ -165,6 +165,11 @@ public class Skeleton extends Application {
 
 
 		Button button = new Button("Play pause bar area");
+		// TODO
+		// DELETE when real buttons come!
+		button.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
+			primLibrary.currentPlaylist.play();
+		});
 		bottom.getChildren().add(button);
 
 		return bottom;
