@@ -47,5 +47,7 @@ public class Library {
 			specialPlaylists.remove(0);
 			specialPlaylists.add(builder.createPlaylist(directories.get(0)));
 		}
+		System.out.println("POOOOOOOOOOOOOOOOOOP");
+		System.out.println(specialPlaylists.get(0).songList);
 	}
 }

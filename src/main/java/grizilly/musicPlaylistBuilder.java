@@ -20,10 +20,8 @@ public class musicPlaylistBuilder {
 	
 
     public Playlist createPlaylist(String musicFolderPath) {
-        musicPlaylistBuilder manager = new musicPlaylistBuilder();
-
         // Now update the playlist with metadata
-        manager.updateLibraryWithMetadata(musicFolderPath);
+        updateLibraryWithMetadata(musicFolderPath);
 
 		return musicPlaylist;
     }

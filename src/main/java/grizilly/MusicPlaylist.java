@@ -1,5 +1,6 @@
 package grizilly;
 
+import java.util.ArrayList;
 
 // class MusicLibrary {
 //     private List<Song> songs;
@@ -26,8 +27,8 @@ package grizilly;
 // }
 
 public class MusicPlaylist extends Playlist {
-	public MusicPlaylist() {
-
+	public MusicPlaylist() {	
+		this.songList = new ArrayList<Song>();
 	}
     // public static void main(String[] args) {
     //     MusicLibrary musicLibrary = new MusicLibrary();
