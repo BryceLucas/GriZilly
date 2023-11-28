@@ -1,6 +1,8 @@
 package gui;
 
 import grizilly.Library;
+import grizilly.Song;
+
 import javafx.application.Application;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -10,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -67,8 +71,9 @@ public class Skeleton extends Application {
 	}
 
 	private MenuBar menuBars() {
-		Menu m1 = new Menu("File");
+		Menu menu = new Menu("File");
 		
+	// Add directory
 		// have to do this label stuff to make clicks work.. doesnt work on MenuItem
 		Label l1 = new Label("Add directory");
 		l1.setTextFill(Color.BLACK);
@@ -76,17 +81,25 @@ public class Skeleton extends Application {
 			primLibrary = MenuBarClicks.addDirectory(primLibrary);
 		});
 		MenuItem menuItem = new MenuItem("", l1);
-		m1.getItems().add(menuItem);
-
+		menu.getItems().add(menuItem);
+	// Scan
 		Label l2 = new Label("Scan for new songs");
 		l2.setTextFill(Color.BLACK);
 		l2.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
 			//TODO
 		});
 		MenuItem menuItem2 = new MenuItem("", l2);
-		m1.getItems().add(menuItem2);
+		menu.getItems().add(menuItem2);
+	// Add custom playlist
+		Label l3 = new Label("Create new custom Playlist");
+		l3.setTextFill(Color.BLACK);
+		l3.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+			primLibrary = MenuBarClicks.createNewCustomPlaylist(primLibrary);
+		});
+		MenuItem menuItem3 = new MenuItem("", l3);
+		menu.getItems().add(menuItem3);
 
-		MenuBar menuBar = new MenuBar(m1);
+		MenuBar menuBar = new MenuBar(menu);
 		return menuBar;
 	}
 
@@ -160,18 +173,72 @@ public class Skeleton extends Application {
 		bottom.prefHeight(140);
 		bottom.prefWidthProperty().bind(primStage.widthProperty());
 		bottom.setPadding(new Insets(10));
+		bottom.setSpacing(10);
+		// bottom.setBackground(color("green"));
 
-		bottom.setBackground(color("green"));
+        Button playButton = new Button("Play");
+        Button pauseButton = new Button("Pause");
+        Button nextButton = new Button("Next");
+        Button prevButton = new Button("Previous");
+        ProgressBar progressBar = new ProgressBar();
+        Label currentlyPlayingLabel = new Label("Now Playing: ");
+		
+		playButton.setOnAction(e -> {
+            play();
+        });
 
+        pauseButton.setOnAction(e -> {
+            pause();
+        });
 
-		Button button = new Button("Play pause bar area");
-		// TODO
-		// DELETE when real buttons come!
-		button.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-			primLibrary.currentPlaylist.play();
-		});
-		bottom.getChildren().add(button);
+        nextButton.setOnAction(e -> {
+            playNextSong();
+        });
+
+        prevButton.setOnAction(e -> {
+            playPreviousSong();
+        });
+
+        
+        Slider volumeSlider = new Slider(0, 1, 0.2); 
+
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            setVolume(newValue.doubleValue());
+        });
+
+       
+        bottom.getChildren().addAll(playButton, pauseButton, nextButton, prevButton, progressBar, currentlyPlayingLabel, volumeSlider);
 
 		return bottom;
 	}
+
+    // Method to play the next song
+    private void playNextSong() {
+        primLibrary.currentPlaylist.next();
+        System.out.println("Next button clicked");
+    }
+
+    // Method to play the previous song
+    private void playPreviousSong() {
+        System.out.println("Previous button clicked");
+    	primLibrary.currentPlaylist.back();
+    }
+
+    // Method to play
+    private void play() {
+        System.out.println("Play button clicked");
+		primLibrary.currentPlaylist.play();
+    }
+
+    // Method to pause
+    private void pause() {
+        System.out.println("Pause button clicked");
+		primLibrary.currentPlaylist.pause();
+    }
+
+    // Method to set volume
+    private void setVolume(double volume) {
+        System.out.println("Volume changed: " + volume);
+		primLibrary.currentPlaylist.setVolume(volume);
+    }
 }

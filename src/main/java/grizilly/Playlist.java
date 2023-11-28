@@ -7,13 +7,13 @@ public abstract class Playlist {
 	boolean shuffle = false;
 	boolean repeat = false;
 
-	String nameOfPlaylist;
+	public String nameOfPlaylist;
 	AudioPlayer audioPlayer;
 	// for songList field, we might need to make a new class to be that songlist
 	// because for example, the music playlist is easy, its just a list of songs,
 	// but artist is more complicated, would need to group artists up and then list each song under an artist
 	ArrayList<Song> songList;
-	Song currentSong;
+	public Song currentSong;
 
 	public void toggleShuffle() {
 		if (repeat == false) {
@@ -60,7 +60,9 @@ public abstract class Playlist {
 
 		// checking if going back would cause OOB error
 		if (index > 0) {
+			audioPlayer.pauseAudio();
 			audioPlayer = new AudioPlayer(songList.get(index - 1).absolutePath);
+			currentSong = songList.get(index - 1);
 			play();
 		} else {
 			System.out.println("Back failed: index - 1 is OOB");
@@ -70,12 +72,17 @@ public abstract class Playlist {
 		int index = songList.indexOf(currentSong);
 
 		// checking if going forward would cause OOB error
-		if (index == songList.size() - 1 ) {
+		if (index + 1 < songList.size()) {
+			audioPlayer.pauseAudio();
 			audioPlayer = new AudioPlayer(songList.get(index + 1).absolutePath);
+			currentSong = songList.get(index + 1);
 			play();
 		} else {
-			System.out.println("Forward failed: index + 1 is OOB");
+			System.out.println("Forward failed: index "+ index + " + 1 is OOB");
 		}
+	}
+	public void setVolume(double volume) {
+		audioPlayer.setVolume(volume);
 	}
 	private void createAudioPlayer() {
 		audioPlayer = new AudioPlayer(currentSong.absolutePath);
