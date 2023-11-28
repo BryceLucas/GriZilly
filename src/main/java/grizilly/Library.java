@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Library {
 	ArrayList<String> directories = new ArrayList<>();
 	ArrayList<Playlist> specialPlaylists = new ArrayList<>();
-	ArrayList<Playlist> customPlaylists = new ArrayList<>();
+	public ArrayList<Playlist> customPlaylists = new ArrayList<>();
 	// default should be the music playlist?
 	public Playlist currentPlaylist;
 	
@@ -55,5 +55,9 @@ public class Library {
 
 	private void setCurrentPlaylist(Playlist playlist) {
 		this.currentPlaylist = playlist;
+	}
+
+	public void createCustomPlaylist(String name) {
+		customPlaylists.add(new CustomPlaylist(name));
 	}
 }

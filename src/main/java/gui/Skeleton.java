@@ -67,8 +67,9 @@ public class Skeleton extends Application {
 	}
 
 	private MenuBar menuBars() {
-		Menu m1 = new Menu("File");
+		Menu menu = new Menu("File");
 		
+	// Add directory
 		// have to do this label stuff to make clicks work.. doesnt work on MenuItem
 		Label l1 = new Label("Add directory");
 		l1.setTextFill(Color.BLACK);
@@ -76,17 +77,25 @@ public class Skeleton extends Application {
 			primLibrary = MenuBarClicks.addDirectory(primLibrary);
 		});
 		MenuItem menuItem = new MenuItem("", l1);
-		m1.getItems().add(menuItem);
-
+		menu.getItems().add(menuItem);
+	// Scan
 		Label l2 = new Label("Scan for new songs");
 		l2.setTextFill(Color.BLACK);
 		l2.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
 			//TODO
 		});
 		MenuItem menuItem2 = new MenuItem("", l2);
-		m1.getItems().add(menuItem2);
+		menu.getItems().add(menuItem2);
+	// Add custom playlist
+		Label l3 = new Label("Create new custom Playlist");
+		l3.setTextFill(Color.BLACK);
+		l3.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+			primLibrary = MenuBarClicks.createNewCustomPlaylist(primLibrary);
+		});
+		MenuItem menuItem3 = new MenuItem("", l3);
+		menu.getItems().add(menuItem3);
 
-		MenuBar menuBar = new MenuBar(m1);
+		MenuBar menuBar = new MenuBar(menu);
 		return menuBar;
 	}
 

@@ -7,7 +7,7 @@ public abstract class Playlist {
 	boolean shuffle = false;
 	boolean repeat = false;
 
-	String nameOfPlaylist;
+	public String nameOfPlaylist;
 	AudioPlayer audioPlayer;
 	// for songList field, we might need to make a new class to be that songlist
 	// because for example, the music playlist is easy, its just a list of songs,
