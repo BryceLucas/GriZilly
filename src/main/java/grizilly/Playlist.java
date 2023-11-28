@@ -13,7 +13,7 @@ public abstract class Playlist {
 	// because for example, the music playlist is easy, its just a list of songs,
 	// but artist is more complicated, would need to group artists up and then list each song under an artist
 	ArrayList<Song> songList;
-	Song currentSong;
+	public Song currentSong;
 
 	public void toggleShuffle() {
 		if (repeat == false) {

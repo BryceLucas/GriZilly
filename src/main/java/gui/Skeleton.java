@@ -1,6 +1,8 @@
 package gui;
 
 import grizilly.Library;
+import grizilly.Song;
+
 import javafx.application.Application;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -10,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -160,18 +164,82 @@ public class Skeleton extends Application {
 		bottom.prefHeight(140);
 		bottom.prefWidthProperty().bind(primStage.widthProperty());
 		bottom.setPadding(new Insets(10));
-
+		bottom.setSpacing(10);
 		bottom.setBackground(color("green"));
 
+        Button playButton = new Button("Play");
+        Button pauseButton = new Button("Pause");
+        Button nextButton = new Button("Next");
+        Button prevButton = new Button("Previous");
+        ProgressBar progressBar = new ProgressBar();
+        Label currentlyPlayingLabel = new Label("Now Playing: ");
+		
+		playButton.setOnAction(e -> {
+            play();
+        });
 
-		Button button = new Button("Play pause bar area");
-		// TODO
-		// DELETE when real buttons come!
-		button.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-			primLibrary.currentPlaylist.play();
-		});
-		bottom.getChildren().add(button);
+        pauseButton.setOnAction(e -> {
+            pause();
+        });
+
+        nextButton.setOnAction(e -> {
+            playNextSong();
+        });
+
+        prevButton.setOnAction(e -> {
+            playPreviousSong();
+        });
+
+        
+        Slider volumeSlider = new Slider(0, 100, 50); 
+
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            setVolume(newValue.doubleValue());
+        });
+
+       
+        bottom.getChildren().addAll(playButton, pauseButton, nextButton, prevButton, progressBar, currentlyPlayingLabel, volumeSlider);
 
 		return bottom;
 	}
+	private void playSong(Song song) {
+      
+        System.out.println("Play button clicked for: " + primLibrary.currentPlaylist.currentSong.title);
+    }
+
+ 
+    private void togglePlayPause() {
+       
+        System.out.println("Play/Pause button clicked");
+    }
+
+    // Method to play the next song
+    private void playNextSong() {
+        
+        System.out.println("Next button clicked");
+    }
+
+    // Method to play the previous song
+    private void playPreviousSong() {
+       
+        System.out.println("Previous button clicked");
+    }
+
+    // Method to play
+    private void play() {
+      
+        System.out.println("Play button clicked");
+    }
+
+    // Method to pause
+    private void pause() {
+ 
+        System.out.println("Pause button clicked");
+    }
+
+    // Method to set volume
+    private void setVolume(double volume) {
+     
+        System.out.println("Volume changed: " + volume);
+    }
 }
