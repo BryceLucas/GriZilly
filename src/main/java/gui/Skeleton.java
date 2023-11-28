@@ -174,7 +174,7 @@ public class Skeleton extends Application {
 		bottom.prefWidthProperty().bind(primStage.widthProperty());
 		bottom.setPadding(new Insets(10));
 		bottom.setSpacing(10);
-		bottom.setBackground(color("green"));
+		// bottom.setBackground(color("green"));
 
         Button playButton = new Button("Play");
         Button pauseButton = new Button("Pause");
@@ -200,7 +200,7 @@ public class Skeleton extends Application {
         });
 
         
-        Slider volumeSlider = new Slider(0, 100, 50); 
+        Slider volumeSlider = new Slider(0, 1, 0.2); 
 
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             setVolume(newValue.doubleValue());
@@ -211,44 +211,34 @@ public class Skeleton extends Application {
 
 		return bottom;
 	}
-	private void playSong(Song song) {
-      
-        System.out.println("Play button clicked for: " + primLibrary.currentPlaylist.currentSong.title);
-    }
-
- 
-    private void togglePlayPause() {
-       
-        System.out.println("Play/Pause button clicked");
-    }
 
     // Method to play the next song
     private void playNextSong() {
-        
+        primLibrary.currentPlaylist.next();
         System.out.println("Next button clicked");
     }
 
     // Method to play the previous song
     private void playPreviousSong() {
-       
         System.out.println("Previous button clicked");
+    	primLibrary.currentPlaylist.back();
     }
 
     // Method to play
     private void play() {
-      
         System.out.println("Play button clicked");
+		primLibrary.currentPlaylist.play();
     }
 
     // Method to pause
     private void pause() {
- 
         System.out.println("Pause button clicked");
+		primLibrary.currentPlaylist.pause();
     }
 
     // Method to set volume
     private void setVolume(double volume) {
-     
         System.out.println("Volume changed: " + volume);
+		primLibrary.currentPlaylist.setVolume(volume);
     }
 }

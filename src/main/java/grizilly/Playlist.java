@@ -60,7 +60,9 @@ public abstract class Playlist {
 
 		// checking if going back would cause OOB error
 		if (index > 0) {
+			audioPlayer.pauseAudio();
 			audioPlayer = new AudioPlayer(songList.get(index - 1).absolutePath);
+			currentSong = songList.get(index - 1);
 			play();
 		} else {
 			System.out.println("Back failed: index - 1 is OOB");
@@ -70,12 +72,17 @@ public abstract class Playlist {
 		int index = songList.indexOf(currentSong);
 
 		// checking if going forward would cause OOB error
-		if (index == songList.size() - 1 ) {
+		if (index + 1 < songList.size()) {
+			audioPlayer.pauseAudio();
 			audioPlayer = new AudioPlayer(songList.get(index + 1).absolutePath);
+			currentSong = songList.get(index + 1);
 			play();
 		} else {
-			System.out.println("Forward failed: index + 1 is OOB");
+			System.out.println("Forward failed: index "+ index + " + 1 is OOB");
 		}
+	}
+	public void setVolume(double volume) {
+		audioPlayer.setVolume(volume);
 	}
 	private void createAudioPlayer() {
 		audioPlayer = new AudioPlayer(currentSong.absolutePath);
