@@ -1,177 +1,248 @@
-package gui;
-
 import grizilly.Library;
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 public class Skeleton extends Application {
-	public Library primLibrary;
-	public Stage primStage;
-	public static void main(String[] args) {
-		launch(args);
-	}
+    public Library primLibrary;
+    public Stage primStage;
+    private MediaPlayer mediaPlayer; //  this adds media 
 
-	@Override
-	public void start(Stage prim) {
-		primLibrary = new Library();
-		primStage = prim;
-		VBox root = createSkeleton();
+    public static void main(String[] args) {
+        launch(args);
+    }
 
-		Scene scene = new Scene(root, 1080, 720);
-		prim.setScene(scene);
-		prim.show();
-	}
+    @Override
+    public void start(Stage prim) {
+        primStage = prim;
+        VBox root = createSkeleton();
 
-	private VBox createSkeleton() {
-		// root that holds all, grows down
-		VBox root = new VBox();
-		// root.setBackground(color("black"));
+        Scene scene = new Scene(root, 1080, 720);
+        prim.setScene(scene);
+        prim.show();
+    }
 
-		// menu bar, holds file menu on top
-		MenuBar menuBar = menuBars();
+    private VBox createSkeleton() {
+        VBox root = new VBox();
+        MenuBar menuBar = menuBars();
+        HBox middle = middle();
+        HBox bottom = bottom();
 
-		// middle pane, holds playlist bar on left, and song list on right
-		HBox middle = middle();
+        root.getChildren().add(menuBar);
+        root.getChildren().add(middle);
+        root.getChildren().add(bottom);
 
-		// bottom bar, holds the play, skip, back buttons
-		HBox bottom = bottom();
+        return root;
+    }
 
-		root.getChildren().add(menuBar);
-		root.getChildren().add(middle);
-		root.getChildren().add(bottom);
+    private Background color(String color) {
+        Background x = Background.fill(javafx.scene.paint.Paint.valueOf(color));
+        return x;
+    }
 
-		return root;
-	}
+    private MenuBar menuBars() {
+        Menu m1 = new Menu("File");
+        m1.getItems().add(new MenuItem("Add directory"));
+        m1.getItems().add(new MenuItem("Scan for new songs"));
+        MenuBar menuBar = new MenuBar(m1);
 
-	private Background color(String color) {
-		Background x = Background.fill(Paint.valueOf(color));
-		return x;
-	}
+        return menuBar;
+    }
 
-	private MenuBar menuBars() {
-		Menu m1 = new Menu("File");
-		
-		// have to do this label stuff to make clicks work.. doesnt work on MenuItem
-		Label l1 = new Label("Add directory");
-		l1.setTextFill(Color.BLACK);
-		l1.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-			primLibrary = MenuBarClicks.addDirectory(primLibrary);
-		});
-		MenuItem menuItem = new MenuItem("", l1);
-		m1.getItems().add(menuItem);
+    private HBox middle() {
+        HBox middle = new HBox();
 
-		Label l2 = new Label("Scan for new songs");
-		l2.setTextFill(Color.BLACK);
-		l2.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-			//TODO
-		});
-		MenuItem menuItem2 = new MenuItem("", l2);
-		m1.getItems().add(menuItem2);
+        // here is the bar
+        VBox playlistBar = new VBox();
+        VBox.setVgrow(playlistBar, Priority.NEVER);
 
-		MenuBar menuBar = new MenuBar(m1);
-		return menuBar;
-	}
+        ListView<String> playlistListView = new ListView<>();
+       
 
-	private HBox middle() {
-		HBox middle = new HBox();
+        playlistBar.getChildren().add(playlistListView);
 
-	// Playlist bar, holds the special playlists and customs playlists
-		VBox playlistBar = new VBox();
-		VBox.setVgrow(playlistBar, Priority.NEVER);
-// ListView would probably be better than TableView s for these two
-	// special playlists
-		TableView<TTest> playlistTable = buildPlaylistTable();
-	// custom playlists
-		TableView<String> customPlaylistTable = buildCustomPlaylistTable();
+        // Song pane
+        VBox songPane = buildSongPane();
 
-		playlistBar.getChildren().addAll(playlistTable, customPlaylistTable);
+        middle.getChildren().addAll(playlistBar, songPane);
+        return middle;
+    }
 
-	// will hold a list of songs that are in the playlist you are in
-		VBox songPane = buildSongPane();
+    private TableView<Song> buildPlaylistTable() {
+        TableView<Song> playlistTable = new TableView<>();
+        playlistTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-		middle.getChildren().addAll(playlistBar, songPane);
-		return middle;
-	}
-	private TableView<TTest> buildPlaylistTable() {
-				TableView<TTest> playlistTable = new TableView<>();
-		playlistTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        TableColumn<Song, String> column = new TableColumn<>("Special playlists");
+        playlistTable.getColumns().add(column);
 
-		TableColumn<TTest, String> column = new TableColumn<>("Special playlists");
-		playlistTable.getColumns().add(column);
-	//this is what should show in the column 
-		TTest tt = new TTest("name1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		playlistTable.getItems().add(tt);
-	
-		playlistTable.getItems().add(new TTest("Music"));
-	//this should be making the name show in the column
-		column.setCellValueFactory(new PropertyValueFactory<TTest, String>(tt.firstNameProperty().getName()));
+        // please add songs here for testing
+        Song sampleSong = new Song("path", "Sample Song", "Sample Artist", 180);
+        playlistTable.getItems().add(sampleSong);
 
-		return playlistTable;
-	}
+        column.setCellValueFactory(new PropertyValueFactory<>("title"));
 
-	private TableView<String> buildCustomPlaylistTable() {
-		TableView<String> customPlaylistTable = new TableView<>();
-		customPlaylistTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        return playlistTable;
+    }
 
-		TableColumn<String, StringProperty> column2 = new TableColumn<>("Custom playlists");
-		customPlaylistTable.getColumns().add(column2);
-		customPlaylistTable.getItems().add("PLAYLIST TEST2222222222222222222222");
+    private VBox buildSongPane() {
+        VBox songPane = new VBox();
 
-		return customPlaylistTable;
-	}
-	private VBox buildSongPane() {
-		VBox songPane = new VBox();
-		
-		// table of songs in a playlist
-		TableView<String> songTable = new TableView<>();
-	// allow the songtable to be big, and to resize itself when winndow changes size
-		songTable.prefHeightProperty().bind(primStage.heightProperty());
-		songTable.prefWidthProperty().bind(primStage.widthProperty());
+        TableView<Song> songTable = buildPlaylistTable();
+        Button playSongButton = new Button("Play");
+        playSongButton.setOnAction(e -> {
+            Song selectedSong = songTable.getSelectionModel().getSelectedItem();
+            if (selectedSong != null) {
+                playSong(selectedSong);
+            }
+        });
 
-		TableColumn<String, String> songName = new TableColumn<>("song name");
-		TableColumn<String, String> songArtist = new TableColumn<>("songs artist");
-		TableColumn<String, String> songLength = new TableColumn<>("Length");
+      
+        Button playPauseButton = new Button("Play/Pause");
+        Button nextButton = new Button("Next");
+        Button prevButton = new Button("Previous");
+        ProgressBar progressBar = new ProgressBar();
+        Slider volumeSlider = new Slider(0, 100, 50); 
 
-		songTable.getColumns().addAll(songName, songArtist, songLength);
-		songPane.getChildren().addAll(songTable);
+        // event handlers 
+        playPauseButton.setOnAction(e -> {
+            togglePlayPause();
+        });
 
-		return songPane;
-	}
-	private HBox bottom() {
-		HBox bottom = new HBox();
-		bottom.prefHeight(140);
-		bottom.prefWidthProperty().bind(primStage.widthProperty());
-		bottom.setPadding(new Insets(10));
+        nextButton.setOnAction(e -> {
+            playNextSong();
+        });
 
-		bottom.setBackground(color("green"));
+        prevButton.setOnAction(e -> {
+            playPreviousSong();
+        });
 
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            setVolume(newValue.doubleValue());
+        });
 
-		Button button = new Button("Play pause bar area");
-		// TODO
-		// DELETE when real buttons come!
-		button.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-			primLibrary.currentPlaylist.play();
-		});
-		bottom.getChildren().add(button);
+        
+        HBox playbackControls = new HBox(playPauseButton, nextButton, prevButton, progressBar, volumeSlider);
+        songPane.getChildren().addAll(songTable, playSongButton, playbackControls);
 
-		return bottom;
-	}
+        return songPane;
+    }
+
+    private HBox bottom() {
+        HBox bottom = new HBox();
+        bottom.prefHeight(140);
+        bottom.prefWidthProperty().bind(primStage.widthProperty());
+        bottom.setPadding(new Insets(10));
+        bottom.setBackground(color("green"));
+
+        Button playButton = new Button("Play");
+        Button pauseButton = new Button("Pause");
+        Button nextButton = new Button("Next");
+        Button prevButton = new Button("Previous");
+        ProgressBar progressBar = new ProgressBar();
+        Label currentlyPlayingLabel = new Label("Now Playing: ");
+
+        playButton.setOnAction(e -> {
+            play();
+        });
+
+        pauseButton.setOnAction(e -> {
+            pause();
+        });
+
+        nextButton.setOnAction(e -> {
+            playNextSong();
+        });
+
+        prevButton.setOnAction(e -> {
+            playPreviousSong();
+        });
+
+        
+        Slider volumeSlider = new Slider(0, 100, 50); 
+
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            setVolume(newValue.doubleValue());
+        });
+
+       
+        HBox playbackControls = new HBox(playButton, pauseButton, nextButton, prevButton, progressBar, currentlyPlayingLabel, volumeSlider);
+        bottom.getChildren().addAll(playbackControls);
+
+        return bottom;
+    }
+
+  
+    private void playSong(Song song) {
+      
+        System.out.println("Play button clicked for: " + song.getTitle());
+    }
+
+ 
+    private void togglePlayPause() {
+       
+        System.out.println("Play/Pause button clicked");
+    }
+
+    // Method to play the next song
+    private void playNextSong() {
+        
+        System.out.println("Next button clicked");
+    }
+
+    // Method to play the previous song
+    private void playPreviousSong() {
+       
+        System.out.println("Previous button clicked");
+    }
+
+    // Method to play
+    private void play() {
+      
+        System.out.println("Play button clicked");
+    }
+
+    // Method to pause
+    private void pause() {
+ 
+        System.out.println("Pause button clicked");
+    }
+
+    // Method to set volume
+    private void setVolume(double volume) {
+     
+        System.out.println("Volume changed: " + volume);
+    }
+}
+
+class Song {
+    private String absolutePath;
+    private String title;
+    private String artist;
+    private int lengthInSeconds;
+
+    public Song(String absolutePath, String title, String artist, int lengthInSeconds) {
+        this.absolutePath = absolutePath;
+        this.title = title;
+        this.artist = artist;
+        this.lengthInSeconds = lengthInSeconds;
+    }
+
+  
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
 }
