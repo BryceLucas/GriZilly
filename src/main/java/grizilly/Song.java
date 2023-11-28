@@ -1,7 +1,7 @@
 package grizilly;
 
 public class Song {
-    String title;
+    public String title;
     String artist;
     String album;
     String year;

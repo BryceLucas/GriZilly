@@ -5,6 +5,7 @@ import java.net.URI;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 
 public class AudioPlayer {
 	String path;
@@ -18,13 +19,28 @@ public class AudioPlayer {
 		URI u = f.toURI();
 		path = u.toString();
 		
-		Media media = new Media(path);
+		Media media = new Media(this.path);
 		player = new MediaPlayer(media);
 	}
 	public void playAudio() {
-		player.play();
+        if (player.getStatus() == Status.PAUSED) {
+            player.play();
+        }
 	}
 	public void pauseAudio() {
 		player.pause();
 	}
+	public void setVolume(double volume) {
+        player.setVolume(volume);
+    }
+    public double getVolume() {
+        return player.getVolume();
+    }
+    public void mute() {
+        player.setMute(true);
+    }
+
+    public void unmute() {
+        player.setMute(false);
+    }
 }
