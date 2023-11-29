@@ -1,5 +1,7 @@
 package gui;
 
+import java.util.ArrayList;
+
 import grizilly.Library;
 import grizilly.Song;
 
@@ -8,6 +10,7 @@ import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -16,6 +19,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -29,6 +33,8 @@ import javafx.stage.Stage;
 public class Skeleton extends Application {
 	public Library primLibrary;
 	public Stage primStage;
+
+	ArrayList<String> nameArray;
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -78,7 +84,34 @@ public class Skeleton extends Application {
 		Label l1 = new Label("Add directory");
 		l1.setTextFill(Color.BLACK);
 		l1.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-			primLibrary = MenuBarClicks.addDirectory(primLibrary);
+			Stage littleWindow = new Stage();
+			littleWindow.setTitle("Enter path to your music.");
+			DialogPane pane = new DialogPane();
+
+			HBox h = new HBox();
+			HBox.setHgrow(h, Priority.ALWAYS);
+			// doesnt seem to do anything.....
+			//HBox.setMargin(h, new Insets(15));
+			h.setPadding(new Insets(15));
+			pane.getChildren().add(h);
+
+			TextField typeBar = new TextField();
+			typeBar.setMinWidth(250);
+			
+			Button finishButton = new Button("Finish");
+			finishButton.setMinWidth(50);
+
+			finishButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
+				primLibrary.addDirectory(typeBar.getText());
+				nameArray = primLibrary.currentPlaylist.giveNameArray();
+				System.out.println(nameArray);
+				//TODO
+				littleWindow.hide();
+			});
+			h.getChildren().addAll(typeBar, finishButton);
+
+			littleWindow.setScene(new Scene(pane));
+			littleWindow.show();
 		});
 		MenuItem menuItem = new MenuItem("", l1);
 		menu.getItems().add(menuItem);
@@ -94,7 +127,7 @@ public class Skeleton extends Application {
 		Label l3 = new Label("Create new custom Playlist");
 		l3.setTextFill(Color.BLACK);
 		l3.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-			primLibrary = MenuBarClicks.createNewCustomPlaylist(primLibrary);
+			//primLibrary = MenuBarClicks.createNewCustomPlaylist(primLibrary);
 		});
 		MenuItem menuItem3 = new MenuItem("", l3);
 		menu.getItems().add(menuItem3);
@@ -130,10 +163,9 @@ public class Skeleton extends Application {
 		TableColumn<TTest, String> column = new TableColumn<>("Special playlists");
 		playlistTable.getColumns().add(column);
 	//this is what should show in the column 
-		TTest tt = new TTest("name1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		TTest tt = new TTest("Music");
 		playlistTable.getItems().add(tt);
 	
-		playlistTable.getItems().add(new TTest("Music"));
 	//this should be making the name show in the column
 		column.setCellValueFactory(new PropertyValueFactory<TTest, String>(tt.firstNameProperty().getName()));
 

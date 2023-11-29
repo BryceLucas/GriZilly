@@ -29,7 +29,13 @@ public abstract class Playlist {
 			shuffle = true;
 		}
 	}
-	
+	public ArrayList<String> giveNameArray() {
+		ArrayList<String> x = new ArrayList<>();
+		for (Song s : songList) {
+			x.add(s.title);
+		}
+		return x;
+	}
 	public void addSong(Song song) {
 		songList.add(song);
 

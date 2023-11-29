@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 public class MenuBarClicks {
 	// every time a new directory is added, will need to update the library, so it returns a library;
-	public static Library addDirectory(Library lib) {
+	public Library addDirectory(Library primLibrary) {
 		Stage littleWindow = new Stage();
 		littleWindow.setTitle("Enter path to your music.");
 		DialogPane pane = new DialogPane();
@@ -32,7 +32,7 @@ public class MenuBarClicks {
 		finishButton.setMinWidth(50);
 
 		finishButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-			lib.addDirectory(typeBar.getText());
+			primLibrary.addDirectory(typeBar.getText());
 			littleWindow.hide();
 		});
 		h.getChildren().addAll(typeBar, finishButton);
@@ -40,10 +40,10 @@ public class MenuBarClicks {
 		littleWindow.setScene(new Scene(pane));
 		littleWindow.show();
 
-		return lib;
+		return primLibrary;
 	}
 
-	public static Library createNewCustomPlaylist(Library lib) {
+	public Library createNewCustomPlaylist(Library lib) {
 		Stage littleWindow = new Stage();
 		littleWindow.setTitle("Enter name of playlist");
 		DialogPane pane = new DialogPane();
