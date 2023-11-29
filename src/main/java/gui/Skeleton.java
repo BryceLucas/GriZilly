@@ -7,6 +7,7 @@ import grizilly.Song;
 
 import javafx.application.Application;
 import javafx.beans.property.StringProperty;
+
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -22,19 +23,20 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 public class Skeleton extends Application {
 	public Library primLibrary;
 	public Stage primStage;
 
-	ArrayList<String> nameArray;
+	ArrayList<TTest> nameArray;
+	ArrayList<TTest> artistArray;
+	HBox mid;
+	VBox songP;
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -71,11 +73,6 @@ public class Skeleton extends Application {
 		return root;
 	}
 
-	private Background color(String color) {
-		Background x = Background.fill(Paint.valueOf(color));
-		return x;
-	}
-
 	private MenuBar menuBars() {
 		Menu menu = new Menu("File");
 		
@@ -104,8 +101,8 @@ public class Skeleton extends Application {
 			finishButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
 				primLibrary.addDirectory(typeBar.getText());
 				nameArray = primLibrary.currentPlaylist.giveNameArray();
-				System.out.println(nameArray);
-				//TODO
+				artistArray = primLibrary.currentPlaylist.giveArtistArray();
+				refreshSongTable();
 				littleWindow.hide();
 			});
 			h.getChildren().addAll(typeBar, finishButton);
@@ -139,6 +136,7 @@ public class Skeleton extends Application {
 	private HBox middle() {
 		HBox middle = new HBox();
 
+
 	// Playlist bar, holds the special playlists and customs playlists
 		VBox playlistBar = new VBox();
 		VBox.setVgrow(playlistBar, Priority.NEVER);
@@ -154,16 +152,27 @@ public class Skeleton extends Application {
 		VBox songPane = buildSongPane();
 
 		middle.getChildren().addAll(playlistBar, songPane);
+		
+		mid = middle;
+		songP = songPane;
+		
 		return middle;
 	}
+	private void refreshSongTable() {
+		VBox newSongPane = buildSongPane();
+		mid.getChildren().remove(songP);
+		mid.getChildren().add(newSongPane);
+	}
+
 	private TableView<TTest> buildPlaylistTable() {
-				TableView<TTest> playlistTable = new TableView<>();
+		TableView<TTest> playlistTable = new TableView<>();
+		playlistTable.setSortPolicy(c -> false);
 		playlistTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
 		TableColumn<TTest, String> column = new TableColumn<>("Special playlists");
 		playlistTable.getColumns().add(column);
 	//this is what should show in the column 
-		TTest tt = new TTest("Music");
+		TTest tt = new TTest("Music", "x");
 		playlistTable.getItems().add(tt);
 	
 	//this should be making the name show in the column
@@ -182,20 +191,31 @@ public class Skeleton extends Application {
 
 		return customPlaylistTable;
 	}
+
 	private VBox buildSongPane() {
 		VBox songPane = new VBox();
-		
+
 		// table of songs in a playlist
-		TableView<String> songTable = new TableView<>();
+		TableView<TTest> songTable = new TableView<>();
+		songTable.setSortPolicy(c->false);
 	// allow the songtable to be big, and to resize itself when winndow changes size
 		songTable.prefHeightProperty().bind(primStage.heightProperty());
 		songTable.prefWidthProperty().bind(primStage.widthProperty());
 
-		TableColumn<String, String> songName = new TableColumn<>("song name");
-		TableColumn<String, String> songArtist = new TableColumn<>("songs artist");
-		TableColumn<String, String> songLength = new TableColumn<>("Length");
+		TableColumn<TTest, String> songName = new TableColumn<>("Title");
+		songName.setCellValueFactory(new PropertyValueFactory<TTest, String>("firstName"));
 
-		songTable.getColumns().addAll(songName, songArtist, songLength);
+		TableColumn<TTest, String> songArtist = new TableColumn<>("Artist");
+		songArtist.setCellValueFactory(new PropertyValueFactory<TTest, String>("artistName"));
+
+		songTable.getColumns().addAll(songName, songArtist);
+		try {
+			for (TTest t : nameArray) {
+				songTable.getItems().add(t);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		songPane.getChildren().addAll(songTable);
 
 		return songPane;

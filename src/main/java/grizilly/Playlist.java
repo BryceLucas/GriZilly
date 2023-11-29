@@ -1,5 +1,5 @@
 package grizilly;
-
+import gui.TTest;
 import java.util.ArrayList;
 import gui.AudioPlayer;
 public abstract class Playlist {
@@ -29,10 +29,17 @@ public abstract class Playlist {
 			shuffle = true;
 		}
 	}
-	public ArrayList<String> giveNameArray() {
-		ArrayList<String> x = new ArrayList<>();
+	public ArrayList<TTest> giveNameArray() {
+		ArrayList<TTest> x = new ArrayList<>();
 		for (Song s : songList) {
-			x.add(s.title);
+			x.add(new TTest(s.title, s.artist));
+		}
+		return x;
+	}
+	public ArrayList<TTest> giveArtistArray() {
+		ArrayList<TTest> x = new ArrayList<>();
+		for (Song s : songList) {
+			x.add(new TTest(s.title, s.artist));
 		}
 		return x;
 	}
