@@ -23,6 +23,6 @@ public class Song {
 
     @Override
     public String toString() {
-        return title + " by " + artist + " on album " + album + " [" + year + ", " + genre + ", " + lengthInSeconds + " seconds]";
+        return title + " by " + artist;
     }
 }

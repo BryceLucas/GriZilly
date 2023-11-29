@@ -101,7 +101,7 @@ public class Skeleton extends Application {
 			finishButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
 				primLibrary.addDirectory(typeBar.getText());
 				nameArray = primLibrary.currentPlaylist.giveNameArray();
-				artistArray = primLibrary.currentPlaylist.giveArtistArray();
+				//artistArray = primLibrary.currentPlaylist.giveArtistArray();
 				refreshSongTable();
 				littleWindow.hide();
 			});
@@ -116,7 +116,7 @@ public class Skeleton extends Application {
 		Label l2 = new Label("Scan for new songs");
 		l2.setTextFill(Color.BLACK);
 		l2.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-			//TODO
+			refreshSongTable();
 		});
 		MenuItem menuItem2 = new MenuItem("", l2);
 		menu.getItems().add(menuItem2);
@@ -259,27 +259,33 @@ public class Skeleton extends Application {
         });
 
        
-        bottom.getChildren().addAll(playButton, pauseButton, nextButton, prevButton, progressBar, currentlyPlayingLabel, volumeSlider);
+        bottom.getChildren().addAll(playButton, pauseButton, prevButton, nextButton, progressBar, currentlyPlayingLabel, volumeSlider);
 
 		return bottom;
 	}
 
+	private void setTitleToSong() {
+		primStage.setTitle(primLibrary.currentPlaylist.currentSong.toString());
+	}
     // Method to play the next song
     private void playNextSong() {
         primLibrary.currentPlaylist.next();
         System.out.println("Next button clicked");
+		setTitleToSong();
     }
 
     // Method to play the previous song
     private void playPreviousSong() {
         System.out.println("Previous button clicked");
     	primLibrary.currentPlaylist.back();
+		setTitleToSong();
     }
 
     // Method to play
     private void play() {
         System.out.println("Play button clicked");
 		primLibrary.currentPlaylist.play();
+		setTitleToSong();
     }
 
     // Method to pause
