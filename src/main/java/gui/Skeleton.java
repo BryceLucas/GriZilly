@@ -1,13 +1,17 @@
 package gui;
 
+import java.util.ArrayList;
+
 import grizilly.Library;
 import grizilly.Song;
 
 import javafx.application.Application;
 import javafx.beans.property.StringProperty;
+
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -16,19 +20,23 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 public class Skeleton extends Application {
 	public Library primLibrary;
 	public Stage primStage;
+
+	ArrayList<TTest> nameArray;
+	ArrayList<TTest> artistArray;
+	HBox mid;
+	VBox songP;
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -65,11 +73,6 @@ public class Skeleton extends Application {
 		return root;
 	}
 
-	private Background color(String color) {
-		Background x = Background.fill(Paint.valueOf(color));
-		return x;
-	}
-
 	private MenuBar menuBars() {
 		Menu menu = new Menu("File");
 		
@@ -78,7 +81,34 @@ public class Skeleton extends Application {
 		Label l1 = new Label("Add directory");
 		l1.setTextFill(Color.BLACK);
 		l1.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-			primLibrary = MenuBarClicks.addDirectory(primLibrary);
+			Stage littleWindow = new Stage();
+			littleWindow.setTitle("Enter path to your music.");
+			DialogPane pane = new DialogPane();
+
+			HBox h = new HBox();
+			HBox.setHgrow(h, Priority.ALWAYS);
+			// doesnt seem to do anything.....
+			//HBox.setMargin(h, new Insets(15));
+			h.setPadding(new Insets(15));
+			pane.getChildren().add(h);
+
+			TextField typeBar = new TextField();
+			typeBar.setMinWidth(250);
+			
+			Button finishButton = new Button("Finish");
+			finishButton.setMinWidth(50);
+
+			finishButton.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
+				primLibrary.addDirectory(typeBar.getText());
+				nameArray = primLibrary.currentPlaylist.giveNameArray();
+				//artistArray = primLibrary.currentPlaylist.giveArtistArray();
+				refreshSongTable();
+				littleWindow.hide();
+			});
+			h.getChildren().addAll(typeBar, finishButton);
+
+			littleWindow.setScene(new Scene(pane));
+			littleWindow.show();
 		});
 		MenuItem menuItem = new MenuItem("", l1);
 		menu.getItems().add(menuItem);
@@ -86,7 +116,7 @@ public class Skeleton extends Application {
 		Label l2 = new Label("Scan for new songs");
 		l2.setTextFill(Color.BLACK);
 		l2.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-			//TODO
+			refreshSongTable();
 		});
 		MenuItem menuItem2 = new MenuItem("", l2);
 		menu.getItems().add(menuItem2);
@@ -94,7 +124,7 @@ public class Skeleton extends Application {
 		Label l3 = new Label("Create new custom Playlist");
 		l3.setTextFill(Color.BLACK);
 		l3.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-			primLibrary = MenuBarClicks.createNewCustomPlaylist(primLibrary);
+			//primLibrary = MenuBarClicks.createNewCustomPlaylist(primLibrary);
 		});
 		MenuItem menuItem3 = new MenuItem("", l3);
 		menu.getItems().add(menuItem3);
@@ -105,6 +135,7 @@ public class Skeleton extends Application {
 
 	private HBox middle() {
 		HBox middle = new HBox();
+
 
 	// Playlist bar, holds the special playlists and customs playlists
 		VBox playlistBar = new VBox();
@@ -121,19 +152,29 @@ public class Skeleton extends Application {
 		VBox songPane = buildSongPane();
 
 		middle.getChildren().addAll(playlistBar, songPane);
+		
+		mid = middle;
+		songP = songPane;
+		
 		return middle;
 	}
+	private void refreshSongTable() {
+		VBox newSongPane = buildSongPane();
+		mid.getChildren().remove(songP);
+		mid.getChildren().add(newSongPane);
+	}
+
 	private TableView<TTest> buildPlaylistTable() {
-				TableView<TTest> playlistTable = new TableView<>();
+		TableView<TTest> playlistTable = new TableView<>();
+		playlistTable.setSortPolicy(c -> false);
 		playlistTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
 		TableColumn<TTest, String> column = new TableColumn<>("Special playlists");
 		playlistTable.getColumns().add(column);
 	//this is what should show in the column 
-		TTest tt = new TTest("name1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		TTest tt = new TTest("Music", "x");
 		playlistTable.getItems().add(tt);
 	
-		playlistTable.getItems().add(new TTest("Music"));
 	//this should be making the name show in the column
 		column.setCellValueFactory(new PropertyValueFactory<TTest, String>(tt.firstNameProperty().getName()));
 
@@ -150,20 +191,31 @@ public class Skeleton extends Application {
 
 		return customPlaylistTable;
 	}
+
 	private VBox buildSongPane() {
 		VBox songPane = new VBox();
-		
+
 		// table of songs in a playlist
-		TableView<String> songTable = new TableView<>();
+		TableView<TTest> songTable = new TableView<>();
+		songTable.setSortPolicy(c->false);
 	// allow the songtable to be big, and to resize itself when winndow changes size
 		songTable.prefHeightProperty().bind(primStage.heightProperty());
 		songTable.prefWidthProperty().bind(primStage.widthProperty());
 
-		TableColumn<String, String> songName = new TableColumn<>("song name");
-		TableColumn<String, String> songArtist = new TableColumn<>("songs artist");
-		TableColumn<String, String> songLength = new TableColumn<>("Length");
+		TableColumn<TTest, String> songName = new TableColumn<>("Title");
+		songName.setCellValueFactory(new PropertyValueFactory<TTest, String>("firstName"));
 
-		songTable.getColumns().addAll(songName, songArtist, songLength);
+		TableColumn<TTest, String> songArtist = new TableColumn<>("Artist");
+		songArtist.setCellValueFactory(new PropertyValueFactory<TTest, String>("artistName"));
+
+		songTable.getColumns().addAll(songName, songArtist);
+		try {
+			for (TTest t : nameArray) {
+				songTable.getItems().add(t);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		songPane.getChildren().addAll(songTable);
 
 		return songPane;
@@ -207,27 +259,33 @@ public class Skeleton extends Application {
         });
 
        
-        bottom.getChildren().addAll(playButton, pauseButton, nextButton, prevButton, progressBar, currentlyPlayingLabel, volumeSlider);
+        bottom.getChildren().addAll(playButton, pauseButton, prevButton, nextButton, progressBar, currentlyPlayingLabel, volumeSlider);
 
 		return bottom;
 	}
 
+	private void setTitleToSong() {
+		primStage.setTitle(primLibrary.currentPlaylist.currentSong.toString());
+	}
     // Method to play the next song
     private void playNextSong() {
         primLibrary.currentPlaylist.next();
         System.out.println("Next button clicked");
+		setTitleToSong();
     }
 
     // Method to play the previous song
     private void playPreviousSong() {
         System.out.println("Previous button clicked");
     	primLibrary.currentPlaylist.back();
+		setTitleToSong();
     }
 
     // Method to play
     private void play() {
         System.out.println("Play button clicked");
 		primLibrary.currentPlaylist.play();
+		setTitleToSong();
     }
 
     // Method to pause
